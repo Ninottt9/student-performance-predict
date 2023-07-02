@@ -53,14 +53,24 @@ for _ in range(population_size):
 before_training = time.time()
 print(f"--- TIME TO READ THE DATA AND INITIALIZE THE POPULATION {(before_training - start_time)} seconds ---")
 
+# Initialize lists to store average fitness values
+average_fitness_population = []
+average_fitness_best = []
+
 # Run the genetic algorithm
 for generation in range(num_generations):
     before_itaration = time.time()
 
+    fitness_values = []
     for individual in population:
         individual.evaluate_fitness(attributes_train, grades_train)
+        fitness_values.append(individual.fitness)
     
     best_individual = max(population, key=lambda x: x.fitness)
+
+    # Calculate average fitness values
+    average_fitness_population.append(np.mean(fitness_values))
+    average_fitness_best.append(best_individual.fitness)
     
     # Print the best individual in each generation
     print("Generation:", generation+1)
@@ -123,7 +133,14 @@ print("Root Mean Squared Error (RMSE) on test set:", rmse)
 
 print(f" --- TOTAL time algorithm took {((time.time() - start_time)/60):.2f} minutes ---")
 
-# for antecedant in best_individual.antecedent_ranges:
-#     getattr(fzCtrl, antecedant).view()
+for antecedant in best_individual.antecedent_ranges:
+    getattr(fzCtrl, antecedant).view()
+plt.show()
 
+generations = range(num_generations)
+plt.plot(generations, average_fitness_population, label='Average Fitness (Population)')
+plt.plot(generations, average_fitness_best, label='Average Fitness (Best Individual)')
+plt.xlabel('Generation')
+plt.ylabel('Fitness')
+plt.legend()
 plt.show()
