@@ -40,6 +40,10 @@ class Solution:
             sorted_vals = np.sort([min_val, mid_val, max_val])
             self.consequent_range.append(tuple(sorted_vals))
 
+        # Sort the ranges based on the mid value
+        self.antecedent_ranges = dict(sorted(self.antecedent_ranges.items(), key=lambda x: x[1][1]))
+        self.consequent_range.sort(key=lambda x: x[1])
+
     def evaluate_fitness(self, attributes_train, grades_train):
         self.update_fuzzy_control_system()
 
