@@ -7,24 +7,23 @@ from fuzzy import FuzzyControls
 from Solution import Solution
 
 # read the data
-# data = np.genfromtxt('student/student-por.csv', delimiter=';', skip_header=1)
-data = pd.read_csv('student/student-por.csv', delimiter=';').values
+data = pd.read_csv('student/student-mat.csv', delimiter=';').values
 
-# take 14th column as study_time, 30th column as absences, 29th columnd as health, 27 as alcohol
+# take 14th column as study_time, 30th column as absences, 29th columnd as health, 27 as alcohol, 32 as final grades
 data = data[:, [13, 29, 28, 26, 31]]
-
-# print(data.shape)
-# print(data)
 
 # split into attributes and grades
 attributes = data[:, :-1]
 grades = data[:, -1]
 
-# print(attributes)
-# print(grades)
 # split into training and test sets
 attributes_train, attributes_test, grades_train, grades_test = train_test_split(attributes, grades, test_size=0.2, random_state=42)
 
+
+# initialize the fuzzy control system
+fzCtrl = FuzzyControls()
+
+# define a function to perform tournament selection
 def perform_selection(population, tournament_size):
     selected_indices = []
 
@@ -34,8 +33,6 @@ def perform_selection(population, tournament_size):
         selected_indices.append(winner)
 
     return [population[i] for i in selected_indices]
-
-fzCtrl = FuzzyControls()
 
 # Define the genetic algorithm parameters
 population_size = 50
@@ -57,7 +54,7 @@ for generation in range(num_generations):
     best_individual = max(population, key=lambda x: x.fitness)
     
     # Print the best individual in each generation
-    print("Generation:", generation, "Best Individual:", best_individual.antecedent_universes, "Best Fitness:", best_individual.fitness)
+    print("Generation:", generation, "Best Fitness:", best_individual.fitness)
     
     # Perform selection
     selected_population = perform_selection(population, tournament_size)
@@ -75,7 +72,7 @@ for generation in range(num_generations):
     
     population = offspring_population
 
-print("BEEST")
+print("\nBEST")
 # Evaluate the best individual
 best_individual = max(population, key=lambda x: x.fitness)
 print("Best individual fitness:", best_individual.fitness)
