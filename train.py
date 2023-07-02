@@ -94,7 +94,10 @@ print("\nBEST")
 for individual in population:
     individual.evaluate_fitness(attributes_train, grades_train)
 best_individual = max(population, key=lambda x: x.fitness)
+best_individual.update_fuzzy_control_system()
 print("Best individual fitness:", best_individual.fitness)
+print("Best Individual:\nAntecedent Ranges:\n", best_individual.antecedent_ranges)
+print("Consequesnt ranges:\n", best_individual.consequent_range)
 
 
 # Testing phase
