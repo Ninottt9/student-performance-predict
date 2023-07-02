@@ -107,8 +107,14 @@ for attributes in attributes_test:
     predicted_grade = best_individual.predict_grade(attributes)  # Predict grade using fuzzy logic
     predicted_grades.append(predicted_grade)
 
-print("Predicted Grades (Test):", predicted_grades)
-print("Actual Grades (Test):", grades_test)
+# print("Predicted Grades (Test):", predicted_grades)
+# print("Actual Grades (Test):", grades_test)
+
+# Write the results to a file
+with open('output.txt', 'w') as file:
+    file.write("Predicted Grades (Test)\tActual Grades (Test)\n")
+    for predicted_grade, actual_grade in zip(predicted_grades, grades_test):
+        file.write(f"{predicted_grade}\t{actual_grade}\n")
 
 # Evaluate performance on the test set
 mse = np.mean((grades_test - predicted_grades) ** 2)
@@ -117,7 +123,7 @@ print("Root Mean Squared Error (RMSE) on test set:", rmse)
 
 print(f" --- TOTAL time algorithm took {((time.time() - start_time)/60):.2f} minutes ---")
 
-for antecedant in best_individual.antecedent_ranges:
-    getattr(fzCtrl, antecedant).view()
+# for antecedant in best_individual.antecedent_ranges:
+#     getattr(fzCtrl, antecedant).view()
 
 plt.show()
