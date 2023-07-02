@@ -3,21 +3,23 @@ import skfuzzy as fuzz
 from skfuzzy import control as ctrl
 
 class FuzzyControls:
-    def __init__(self): 
-        self.study_time_range = np.arange(1, 11, 1)
-        self.absences_range = np.arange(0, 94, 1)
-        self.health_range = np.arange(1, 6, 1)
-        self.alcohol_range = np.arange(1, 6, 1)
+    def __init__(self):
+
+        self.antecedent_universes = {
+            'study_time': np.arange(1, 11, 1),
+            'absences': np.arange(0, 94, 1),
+            'health': np.arange(1, 6, 1),
+            'alcohol': np.arange(1, 6, 1)
+        }
+
         self.grade_range = np.arange(0, 21, 1)
 
-        self.study_time = ctrl.Antecedent(self.study_time_range, 'study_time')
-        self.absences = ctrl.Antecedent(self.absences_range, 'absences')
-        self.health = ctrl.Antecedent(self.health_range, 'health')
-        self.alcohol = ctrl.Antecedent(self.alcohol_range, 'alcohol')
+        self.study_time = ctrl.Antecedent(self.antecedent_universes['study_time'], 'study_time')
+        self.absences = ctrl.Antecedent(self.antecedent_universes['absences'], 'absences')
+        self.health = ctrl.Antecedent(self.antecedent_universes['health'], 'health')
+        self.alcohol = ctrl.Antecedent(self.antecedent_universes['alcohol'], 'alcohol')
         self.grade = ctrl.Consequent(self.grade_range, 'grade')
         self.grade.defuzzify_method = 'lom'
-
-        # Define the fuzzy membership functions and rules here
 
     def init_control_system(self):
         self.rule1 = ctrl.Rule(self.study_time['low'] & self.absences['low'] & self.health['low'] & self.alcohol['low'], self.grade['low'])

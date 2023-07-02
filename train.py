@@ -39,7 +39,7 @@ def perform_selection(population, tournament_size):
 
 # Define the genetic algorithm parameters
 population_size = 50
-num_generations = 10
+num_generations = 50
 mutation_rate = 0.2
 tournament_size = 5
 
@@ -86,12 +86,12 @@ for generation in range(num_generations):
     iteration_time = time.time() - before_itaration
     print("--- ITERATION %.2f seconds ---\n" % iteration_time)
 
-print("--- TOTAL time training took %.2f minutes ---" % (time.time() - before_training) / 60)
+print("--- TOTAL time training took %.2f minutes ---" % ((time.time() - before_training) / 60))
 
-print("\nBEST")
-# Evaluate the best individual
-best_individual = max(population, key=lambda x: x.fitness)
-print("Best individual fitness:", best_individual.fitness)
+# print("\nBEST")
+# # Evaluate the best individual
+# best_individual = max(population, key=lambda x: x.fitness)
+# print("Best individual fitness:", best_individual.fitness)
 
 # Testing phase
 # Apply the best individual to the test set
@@ -108,4 +108,4 @@ mse = np.mean((grades_test - predicted_grades) ** 2)
 rmse = np.sqrt(mse)
 print("Root Mean Squared Error (RMSE) on test set:", rmse)
 
-print(" --- TOTAL time algorithm took %s seconds ---" % (time.time() - start_time))
+print(" --- TOTAL time algorithm took %s minutes ---" % ((time.time() - start_time)/60))

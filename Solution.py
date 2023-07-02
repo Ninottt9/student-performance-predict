@@ -5,17 +5,14 @@ import copy
 
 class Solution:
     def __init__(self, fzCtrl):
-        self.antecedent_universes = {
-            'study_time': fzCtrl.study_time_range,
-            'absences': fzCtrl.absences_range,
-            'health': fzCtrl.health_range,
-            'alcohol': fzCtrl.alcohol_range
+
+        self.antecedent_ranges = {
+            'study_time': [],
+            'absences': [],
+            'health': [],
+            'alcohol': []
         }
-
-        self.consequent_universe = fzCtrl.grade_range
-
-        self.antecedent_ranges = copy.deepcopy(self.antecedent_universes)
-        self.consequent_range = copy.deepcopy(self.consequent_universe)
+        self.consequent_range = []
 
         self.fitness = float('-inf')
         self.fzCtrl = fzCtrl
@@ -26,17 +23,17 @@ class Solution:
         for antecedent in self.antecedent_ranges:
             self.antecedent_ranges[antecedent] = []
             for _ in range(3):
-                min_val = np.random.choice(self.antecedent_universes[antecedent])
-                max_val = np.random.choice(self.antecedent_universes[antecedent])
-                mid_val = np.random.choice(self.antecedent_universes[antecedent])
+                min_val = np.random.choice(self.fzCtrl.antecedent_universes[antecedent])
+                mid_val = np.random.choice(self.fzCtrl.antecedent_universes[antecedent])
+                max_val = np.random.choice(self.fzCtrl.antecedent_universes[antecedent])
                 sorted_vals = np.sort([min_val, mid_val, max_val])
                 self.antecedent_ranges[antecedent].append(tuple(sorted_vals))
 
         self.consequent_range = []
         for _ in range(3):
-            min_val = np.random.choice(self.consequent_universe)
-            max_val = np.random.choice(self.consequent_universe)
-            mid_val = np.random.choice(self.consequent_universe)
+            min_val = np.random.choice(self.fzCtrl.grade_range)
+            max_val = np.random.choice(self.fzCtrl.grade_range)
+            mid_val = np.random.choice(self.fzCtrl.grade_range)
             sorted_vals = np.sort([min_val, mid_val, max_val])
             self.consequent_range.append(tuple(sorted_vals))
 
@@ -44,32 +41,32 @@ class Solution:
         self.antecedent_ranges = {key: sorted(value, key=lambda x: x[2]) for key, value in self.antecedent_ranges.items()}
         self.consequent_range.sort(key=lambda x: x[2])
 
-    def evaluate_fitness(self, attributes_train, grades_train):
+    def evaluate_fitness(self, attributes, grades):
         self.update_fuzzy_control_system()
 
         predicted_grades = []
-        for attributes in attributes_train:
-            predicted_grade = self.predict_grade(attributes)
+        for attribute in attributes:
+            predicted_grade = self.predict_grade(attribute)
             predicted_grades.append(predicted_grade)
 
-        self.fitness = -np.mean((grades_train - predicted_grades) ** 2)
+        self.fitness = -np.mean((grades - predicted_grades) ** 2)
 
     def update_fuzzy_control_system(self):
         for antecedent in self.antecedent_ranges:
             fz_antecedent = getattr(self.fzCtrl, antecedent)
-            fz_antecedent['low'] = fuzz.trimf(self.antecedent_universes[antecedent], self.antecedent_ranges[antecedent][0])
-            fz_antecedent['medium'] = fuzz.trimf(self.antecedent_universes[antecedent], self.antecedent_ranges[antecedent][1])
-            fz_antecedent['high'] = fuzz.trimf(self.antecedent_universes[antecedent], self.antecedent_ranges[antecedent][2])
+            fz_antecedent['low'] = fuzz.trimf(self.fzCtrl.antecedent_universes[antecedent], self.antecedent_ranges[antecedent][0])
+            fz_antecedent['medium'] = fuzz.trimf(self.fzCtrl.antecedent_universes[antecedent], self.antecedent_ranges[antecedent][1])
+            fz_antecedent['high'] = fuzz.trimf(self.fzCtrl.antecedent_universes[antecedent], self.antecedent_ranges[antecedent][2])
 
         fz_grade = self.fzCtrl.grade
-        fz_grade['low'] = fuzz.trimf(self.consequent_universe, self.consequent_range[0])
-        fz_grade['medium'] = fuzz.trimf(self.consequent_universe, self.consequent_range[1])
-        fz_grade['high'] = fuzz.trimf(self.consequent_universe, self.consequent_range[2])
+        fz_grade['low'] = fuzz.trimf(self.fzCtrl.grade_range, self.consequent_range[0])
+        fz_grade['medium'] = fuzz.trimf(self.fzCtrl.grade_range, self.consequent_range[1])
+        fz_grade['high'] = fuzz.trimf(self.fzCtrl.grade_range, self.consequent_range[2])
 
         self.fzCtrl.init_control_system()
 
     def predict_grade(self, attributes):
-        self.update_fuzzy_control_system()
+        # self.update_fuzzy_control_system()
 
         self.fzCtrl.control_simulation.input['study_time'] = attributes[0]
         self.fzCtrl.control_simulation.input['absences'] = attributes[1]
@@ -85,20 +82,23 @@ class Solution:
             if random.random() < mutation_rate:
                 self.antecedent_ranges[antecedent] = []
                 for _ in range(3):
-                    min_val = np.random.choice(self.antecedent_universes[antecedent])
-                    max_val = np.random.choice(self.antecedent_universes[antecedent])
-                    mid_val = np.random.choice(self.antecedent_universes[antecedent])
+                    min_val = np.random.choice(self.fzCtrl.antecedent_universes[antecedent])
+                    max_val = np.random.choice(self.fzCtrl.antecedent_universes[antecedent])
+                    mid_val = np.random.choice(self.fzCtrl.antecedent_universes[antecedent])
                     sorted_vals = np.sort([min_val, mid_val, max_val])
                     self.antecedent_ranges[antecedent].append(tuple(sorted_vals))
 
         if random.random() < mutation_rate:
             self.consequent_range = []
             for _ in range(3):
-                min_val = np.random.choice(self.consequent_universe)
-                max_val = np.random.choice(self.consequent_universe)
-                mid_val = np.random.choice(self.consequent_universe)
+                min_val = np.random.choice(self.fzCtrl.grade_range)
+                max_val = np.random.choice(self.fzCtrl.grade_range)
+                mid_val = np.random.choice(self.fzCtrl.grade_range)
                 sorted_vals = np.sort([min_val, mid_val, max_val])
                 self.consequent_range.append(tuple(sorted_vals))
+            
+        self.antecedent_ranges = {key: sorted(value, key=lambda x: x[2]) for key, value in self.antecedent_ranges.items()}
+        self.consequent_range.sort(key=lambda x: x[2])
 
     def crossover(self, other):
         child1 = Solution(self.fzCtrl)
