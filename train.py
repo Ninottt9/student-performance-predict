@@ -50,7 +50,7 @@ for _ in range(population_size):
     population.append(individual)
 
 before_training = time.time() - start_time
-print("--- BEFORE ALGORITHM TRAINING %s seconds ---" % before_training)
+print("--- TIME TO READ THE DATA AND INITIALIZE THE POPULATION %s seconds ---" % before_training)
 
 # Run the genetic algorithm
 for generation in range(num_generations):
@@ -84,9 +84,9 @@ for generation in range(num_generations):
     population = offspring_population
 
     iteration_time = time.time() - before_itaration
-    print("--- ITERATION %.2f seconds ---" % iteration_time)
+    print("--- ITERATION %.2f seconds ---\n" % iteration_time)
 
-print("--- TOTAL time training took %.2f seconds ---" % (time.time() - before_training))
+print("--- TOTAL time training took %.2f minutes ---" % (time.time() - before_training) / 60)
 
 print("\nBEST")
 # Evaluate the best individual
