@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
 import time
+import matplotlib.pyplot as plt
 
 from fuzzy import FuzzyControls
 from Solution import Solution
@@ -95,8 +96,6 @@ for individual in population:
 best_individual = max(population, key=lambda x: x.fitness)
 print("Best individual fitness:", best_individual.fitness)
 
-for antecedant in best_individual.antecedent_ranges:
-    getattr(fzCtrl, antecedant).view()
 
 # Testing phase
 # Apply the best individual to the test set
@@ -114,3 +113,8 @@ rmse = np.sqrt(mse)
 print("Root Mean Squared Error (RMSE) on test set:", rmse)
 
 print(f" --- TOTAL time algorithm took {((time.time() - start_time)/60):.2f} minutes ---")
+
+for antecedant in best_individual.antecedent_ranges:
+    getattr(fzCtrl, antecedant).view()
+
+plt.show()
