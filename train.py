@@ -49,8 +49,8 @@ for _ in range(population_size):
     individual = Solution(fzCtrl)
     population.append(individual)
 
-before_training = time.time() - start_time
-print("--- TIME TO READ THE DATA AND INITIALIZE THE POPULATION %s seconds ---" % before_training)
+before_training = time.time()
+print(f"--- TIME TO READ THE DATA AND INITIALIZE THE POPULATION {(before_training - start_time)} seconds ---")
 
 # Run the genetic algorithm
 for generation in range(num_generations):
@@ -86,12 +86,17 @@ for generation in range(num_generations):
     iteration_time = time.time() - before_itaration
     print("--- ITERATION %.2f seconds ---\n" % iteration_time)
 
-print("--- TOTAL time training took %.2f minutes ---" % ((time.time() - before_training) / 60))
+print(f"--- TOTAL time training took {((time.time() - before_training)/60):.2f} minutes ---")
 
-# print("\nBEST")
+print("\nBEST")
 # # Evaluate the best individual
-# best_individual = max(population, key=lambda x: x.fitness)
-# print("Best individual fitness:", best_individual.fitness)
+for individual in population:
+    individual.evaluate_fitness(attributes_train, grades_train)
+best_individual = max(population, key=lambda x: x.fitness)
+print("Best individual fitness:", best_individual.fitness)
+
+for antecedant in best_individual.antecedent_ranges:
+    getattr(fzCtrl, antecedant).view()
 
 # Testing phase
 # Apply the best individual to the test set
@@ -108,4 +113,4 @@ mse = np.mean((grades_test - predicted_grades) ** 2)
 rmse = np.sqrt(mse)
 print("Root Mean Squared Error (RMSE) on test set:", rmse)
 
-print(" --- TOTAL time algorithm took %s minutes ---" % ((time.time() - start_time)/60))
+print(f" --- TOTAL time algorithm took {((time.time() - start_time)/60):.2f} minutes ---")
