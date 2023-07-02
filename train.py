@@ -87,7 +87,7 @@ for attributes in attributes_test:
     predicted_grade = best_individual.predict_grade(attributes)  # Predict grade using fuzzy logic
     predicted_grades.append(predicted_grade)
 
-print("Predicted Grades (Test):", grades_test)
+print("Predicted Grades (Test):", predicted_grades)
 print("Actual Grades (Test):", grades_test)
 
 # Evaluate performance on the test set
