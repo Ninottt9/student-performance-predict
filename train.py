@@ -62,7 +62,10 @@ for generation in range(num_generations):
     best_individual = max(population, key=lambda x: x.fitness)
     
     # Print the best individual in each generation
-    print("Generation:", generation+1, "Best Fitness:", best_individual.fitness)
+    print("Generation:", generation+1)
+    print("Best Individual:\nAntecedent Ranges:\n", best_individual.antecedent_ranges)
+    print("Consequesnt ranges:\n", best_individual.consequent_range)
+    print("Best Fitness:", best_individual.fitness)
     
     # Perform selection
     selected_population = perform_selection(population, tournament_size)
