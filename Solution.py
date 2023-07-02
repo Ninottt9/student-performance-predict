@@ -10,7 +10,7 @@ class Solution:
             'study_time': [],
             'absences': [],
             'health': [],
-            'alcohol': []
+            # 'alcohol': []
         }
         self.consequent_range = []
 
@@ -71,7 +71,7 @@ class Solution:
         self.fzCtrl.control_simulation.input['study_time'] = attributes[0]
         self.fzCtrl.control_simulation.input['absences'] = attributes[1]
         self.fzCtrl.control_simulation.input['health'] = attributes[2]
-        self.fzCtrl.control_simulation.input['alcohol'] = attributes[3]
+        # self.fzCtrl.control_simulation.input['alcohol'] = attributes[3]
         self.fzCtrl.control_simulation.compute()
 
         predicted_grade = self.fzCtrl.control_simulation.output['grade']
