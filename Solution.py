@@ -10,7 +10,6 @@ class Solution:
             'study_time': [],
             'absences': [],
             'health': [],
-            # 'alcohol': []
         }
         self.consequent_range = []
 
@@ -66,12 +65,9 @@ class Solution:
         self.fzCtrl.init_control_system()
 
     def predict_grade(self, attributes):
-        # self.update_fuzzy_control_system()
-
         self.fzCtrl.control_simulation.input['study_time'] = attributes[0]
         self.fzCtrl.control_simulation.input['absences'] = attributes[1]
         self.fzCtrl.control_simulation.input['health'] = attributes[2]
-        # self.fzCtrl.control_simulation.input['alcohol'] = attributes[3]
         self.fzCtrl.control_simulation.compute()
 
         predicted_grade = self.fzCtrl.control_simulation.output['grade']
